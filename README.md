@@ -38,7 +38,7 @@
 1. Запустите код в среде Python с установите все необходимые библиотеки из файла ```"requirements.txt"``` командой ```"pip install -r requirements.txt"```.
 2. Выберите один из методов, который вам нужен, и вызовите соответствующую функцию.
 3. Используется три API для проверки транзакций: Guarda, Infura и Etherscan, с автоматическим переключением при превышении лимита запросов.
-4. Результаты записываются в файлы successful_wallets.txt(адреса с транзакциями), bad_wallets.txt(адреса без транзакций), и successful_wallets_balance.txt(адреса с балансом).
+4. Результаты записываются в файлы: ```successful_wallets.txt```(адреса с транзакциями), ```bad_wallets.txt```(адреса без транзакций), и ```successful_wallets_balance.txt```(адреса с балансом).
 
 Скрипт использует файл конфигурации API.ini, который должен содержать следующие ключи:
 ```
@@ -46,6 +46,55 @@ INFURA_URL: URL Infura API.
 ETHERSCAN_API_KEY: ключ API для Etherscan.
 ```
 Файл API.ini находится рядом с исполняемым файлом, добавьте свои API для каждого сервиса. 
+-------------------------------------------------------------------------------------------
+# ETH-keys-generator-Multifunctional
+This script allows you to:
+1. Generate Ethereum addresses using various methods (Standard generation, Low entropy generation, Vanity address brute-force, Generation within groups by splitting the key into 32-bit parts (A, B, C, D, E, F, G, H)).
+2. Check if the generated addresses have any transactions.
+3. Retrieve and log the balance of the addresses.
 
+Description of ETH key generation methods:
+1. Standard Generation:
+A random key is created based on the cryptographic hashing function Keccak.
+- Advantages:
+High entropy and security.
+Suitable for real-world applications and creating secure wallets.
+- Disadvantages:
+Not suitable for security testing as it has a very low chance of generating an existing key.
 
+2. Low Entropy Generation:
+The private key is generated using a function that creates keys with predictable patterns (e.g., sequences of zeros or identical bytes).
+- Advantages:
+Quick key generation, useful for testing or educational purposes.
+- Disadvantages:
+Low-entropy keys are insecure and should not be used for real transactions or storing assets. This method has the highest chance of generating an existing key.
+
+3. Vanity Address Brute-Force:
+This method doesn't generate keys directly but creates addresses with specific patterns (prefixes and/or suffixes). It keeps generating addresses until a match with the desired pattern is found.
+- Advantages:
+Allows generating custom, "vanity" addresses like "0xDEAD6F0e71b9BEDa715cAa128D4D001d98F21666".
+- Disadvantages:
+The generation time can be unpredictable, especially for complex patterns due to the need to brute-force many addresses. The keys may also be less secure with a higher chance of duplicates.
+
+4. Generation Within Groups:
+Keys are generated within specific ranges defined by groups (A, B, C, D, E, F, G, H). The key is split into 8 parts, and only one part of it is generated.
+- Advantages:
+Limiting the key generation range can be useful for creating keys that meet specific criteria or for testing purposes. There is also a higher chance of finding insecure keys.
+- Disadvantages:
+The generated keys may be less diverse compared to fully random keys.
+
+Running and Usage:
+1. Run the code in a Python environment and install all required libraries from the ```requirements.txt file``` using the command: ```pip install -r requirements.txt```
+2. Choose the desired generation method and call the corresponding function.
+3. The script uses three APIs for transaction checking: Guarda, Infura, and Etherscan, with automatic switching when the request limit is reached.
+4. Results are saved into the following files: ```successful_wallets.txt``` (addresses with transactions),
+```bad_wallets.txt``` (addresses without transactions) and
+```successful_wallets_balance.txt```(addresses with balances).
+
+The script uses a configuration file API.ini that must contain the following keys:
+```
+INFURA_URL: URL for the Infura API.
+ETHERSCAN_API_KEY: API key for Etherscan.
+```
+The API.ini file should be located alongside the script, and you need to add your API keys for each service.
 
