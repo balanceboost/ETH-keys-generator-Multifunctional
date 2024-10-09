@@ -21,9 +21,9 @@ INFURA_RATE_LIMIT_RESET_HOUR = 1
 guarda_api_active = True
 guarda_limit_reached_time = None
 GUARDA_RATE_LIMIT_RESET_HOUR = 1  
-etherscan_api_active = True  # Переменная для отслеживания активности Etherscan API
-etherscan_limit_reached_time = None  # Переменная для хранения времени достижения лимита запросов
-ETHERSCAN_RATE_LIMIT_RESET_HOUR = 1  # Час сброса лимита Etherscan API (например, 1 час ночи)
+etherscan_api_active = True 
+etherscan_limit_reached_time = None 
+ETHERSCAN_RATE_LIMIT_RESET_HOUR = 1
 pause_event = asyncio.Event()
 pause_event.set() 
 used_keys = set()
@@ -91,13 +91,13 @@ async def check_all_apis(address):
                 reset_time += datetime.timedelta(days=1)
             wait_time = (reset_time - now).total_seconds()
             print(f"Ожидание {wait_time} секунд до следующего сброса лимита.")
-            await asyncio.sleep(wait_time)  # Ждем до часа ночи    
+            await asyncio.sleep(wait_time) 
 def can_use_guarda():
     global guarda_api_active
     if guarda_api_active:
         return True
     else:
-        return False  # Guarda не активен
+        return False  
 def can_use_infura():
     global infura_api_active, infura_limit_reached_time
     now = datetime.datetime.now()
@@ -127,7 +127,7 @@ async def check_transactions(address):
             if has_transactions_guarda:
                 return has_transactions_guarda
             else:
-                guarda_api_active = False  # Устанавливаем флаг неактивности для Guarda
+                guarda_api_active = False  
                 print(Fore.YELLOW + "Guarda недоступен, переключаемся на Infura." + Style.RESET_ALL)
     if can_use_infura():
         print(Fore.CYAN + f"Проверка транзакций через Infura для адреса: {address}" + Style.RESET_ALL)
@@ -136,7 +136,7 @@ async def check_transactions(address):
             if has_transactions_infura:
                 return has_transactions_infura
             else:
-                infura_api_active = False  # Устанавливаем флаг неактивности для Infura
+                infura_api_active = False  
                 print(Fore.YELLOW + "Infura недоступен, переключаемся на Etherscan." + Style.RESET_ALL)
     if can_use_etherscan():
         print(Fore.CYAN + f"Проверка транзакций через Etherscan для адреса: {address}" + Style.RESET_ALL)
@@ -144,14 +144,14 @@ async def check_transactions(address):
         if has_transactions_etherscan is not None:
             return has_transactions_etherscan
         else:
-            etherscan_api_active = False  # Устанавливаем флаг неактивности для Etherscan
+            etherscan_api_active = False 
             print(Fore.YELLOW + "Etherscan недоступен." + Style.RESET_ALL)
     print(Fore.RED + f"Ошибка: ни Guarda, ни Infura, ни Etherscan, не смогли обработать запрос для адреса: {address}" + Style.RESET_ALL)
     return None
 async def check_transactions_guarda(address):
     global guarda_api_active, guarda_limit_reached_time
     if not can_use_guarda():
-        return None  # Если Guarda не доступен, сразу выходим
+        return None  
     try:
         if can_use_guarda():
             async with aiohttp.ClientSession() as session:
@@ -175,7 +175,7 @@ async def check_transactions_guarda(address):
 async def check_transactions_infura(address):
     global infura_api_active, infura_limit_reached_time
     if not can_use_infura():
-        return None  # Если Infura не доступен, сразу выходим
+        return None  
     try:
         if can_use_infura():
             loop = asyncio.get_running_loop()
@@ -203,12 +203,12 @@ async def check_transactions_etherscan(address):
         print("Etherscan API временно недоступен. Попробуем Infura...")
         if can_use_infura():
             print("Переключаемся на Infura...")
-            return await check_transactions_infura(address)  # Переход на Infura
+            return await check_transactions_infura(address) 
         else:
             print("Infura тоже недоступен. Попробуем Guarda...")
             if can_use_guarda():
                 print("Переключаемся на Guarda...")
-                return await check_transactions_guarda(address)  # Переход на Guarda
+                return await check_transactions_guarda(address) 
             else:
                 print("Все API недоступны.")
                 return None
@@ -221,24 +221,24 @@ async def check_transactions_etherscan(address):
                     data = await resp.json()
                     if data['status'] == '1':
                         transactions = data['result']
-                        return transactions  # Возвращаем список транзакций
+                        return transactions  
                     else:
                         print(f"Ошибка Etherscan: {data['message']}")
-                elif resp.status == 429:  # Превышен лимит запросов
+                elif resp.status == 429: 
                     print("Достигнут лимит Etherscan API. Устанавливаю время сброса...")
-                    etherscan_api_active = False  # Деактивируем API
+                    etherscan_api_active = False  
                     etherscan_limit_reached_time = now
                     etherscan_limit_reached_time = etherscan_limit_reached_time.replace(hour=ETHERSCAN_RATE_LIMIT_RESET_HOUR, minute=0, second=0, microsecond=0)
                     if etherscan_limit_reached_time <= now:
                         etherscan_limit_reached_time += datetime.timedelta(days=1)
                     print("API будет снова доступен после", etherscan_limit_reached_time)
                     print("Переключаемся на Infura...")
-                    return await check_transactions_infura(address)  # Переход на Infura
+                    return await check_transactions_infura(address)  
                 else:
                     print(f"Ошибка: {resp.status}")
     except (aiohttp.ClientError, asyncio.TimeoutError) as e:
         print(Fore.RED + f"Ошибка при запросе к Etherscan: {e}" + Style.RESET_ALL)
-    return None  # Если ничего не сработало, возвращаем None
+    return None 
 async def get_balance_etherscan(address):
     global etherscan_api_active, etherscan_limit_reached_time
     try:
@@ -314,9 +314,9 @@ def generate_weak_private_key():
     ]
     pattern = random.choice(weak_patterns)
     random_byte_position = random.randint(0, 31)  
-    random_byte_value = random.randint(0, 64)  # Случайное значение байта (0-255)
+    random_byte_value = random.randint(0, 128)  # Случайное значение байта (0-255)
     pattern = bytearray(pattern)
-    pattern[random_byte_position] = random_byte_value  # Вносим изменение
+    pattern[random_byte_position] = random_byte_value 
     return Web3.keccak(bytes(pattern)).hex()
 def generate_vanity_address(prefix=None, suffix=None):
     while True:
