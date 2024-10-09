@@ -46,6 +46,7 @@ INFURA_URL: URL Infura API.
 ETHERSCAN_API_KEY: ключ API для Etherscan.
 ```
 Файл API.ini находится рядом с исполняемым файлом, добавьте свои API для каждого сервиса. 
+
 -------------------------------------------------------------------------------------------
 # ETH-keys-generator-Multifunctional
 This script allows you to:
