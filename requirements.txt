@@ -1,0 +1,7 @@
+pip install aiohttp
+pip install aiofiles
+pip install keyboard
+pip install pyfiglet
+pip install colorama
+pip install termcolor
+pip install web3
