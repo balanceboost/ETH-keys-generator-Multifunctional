@@ -1,4 +1,5 @@
 # ETH-keys-generator-Multifunctional
+![ETH MULTI](https://github.com/user-attachments/assets/1877fb0f-f740-4b0c-a3d9-fcd557d4695b)
 Данный скрипт позволяет:
 1. Генерировать Ethereum-адреса с помощью различных методов(Стандартная генерация, Низкая энтропия, Брутфорс Vanity-адресов, Генерация в пределах группы (разбиение ключа на 32-битные части (A,B,C,D,E,F,G,H))
 2. Проверять, есть ли у сгенерированных адресов транзакции.
@@ -50,6 +51,7 @@ ETHERSCAN_API_KEY: ключ API для Etherscan.
     Для поддержки автора: TFbR9gXb5r6pcALasjX1FKBArbKc4xBjY8
 -------------------------------------------------------------------------------------------
 # ETH-keys-generator-Multifunctional
+![ETH MULTI](https://github.com/user-attachments/assets/1877fb0f-f740-4b0c-a3d9-fcd557d4695b)
 This script allows you to:
 1. Generate Ethereum addresses using various methods (Standard generation, Low entropy generation, Vanity address brute-force, Generation within groups by splitting the key into 32-bit parts (A, B, C, D, E, F, G, H)).
 2. Check if the generated addresses have any transactions.
