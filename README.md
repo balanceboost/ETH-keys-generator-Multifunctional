@@ -1,104 +1,162 @@
 # ETH-keys-generator-Multifunctional
-![ETH MULTI](https://github.com/user-attachments/assets/1877fb0f-f740-4b0c-a3d9-fcd557d4695b)
+![1](https://github.com/user-attachments/assets/8d3ed2ca-1821-4a6a-9a3c-5d6476887424)
 Данный скрипт позволяет:
-1. Генерировать Ethereum-адреса с помощью различных методов(Стандартная генерация, Низкая энтропия, Брутфорс Vanity-адресов, Генерация в пределах группы (разбиение ключа на 32-битные части (A,B,C,D,E,F,G,H))
-2. Проверять, есть ли у сгенерированных адресов транзакции.
-3. Получать и записывать баланс адресов.
+    Данный скрипт предназначен для генерации ETH-адресов с использованием различных методов, проверки наличия транзакций на этих адресах и получения их баланса. Он предоставляет гибкий инструментарий для тестирования, обучения или поиска уязвимых ключей, но не рекомендуется для создания безопасных кошельков для реальных транзакций.
 
-Описание методов генерации ключа ETH:
-1. Стандартная генерация:
-Создается случайный ключ на основе криптографической функции хеширования Keccak.
-- Преимущества:
-Высокая степень энтропии и безопасность.
-Подходит для использования в реальных приложениях и для создания безопасных кошельков.
-- Недостатки:
-Не подходит для тестирования безопасности т.к имеет максимально маленький шанс генерации уже существующего ключа.
+Возможности скрипта:
+- Генерация ETH-адресов с использованием 12 различных методов, включая стандартную генерацию, методы с низкой энтропией, брутфорс vanity-адресов, генерацию в пределах групп (A–H) и другие.
+- Проверка наличия транзакций на сгенерированных адресах через API.
+- Получение и запись баланса адресов в ETH.
+- Сравнение сгенерированных адресов с адресами из текстовых файлов.
+- Сохранение результатов в файлы: successful_wallets.txt (адреса с транзакциями), successful_wallets_balance.txt (адреса с ненулевым балансом), bad_wallets.txt (адреса без транзакций).
+- Отправка уведомлений в Telegram при нахождении активных кошельков.
+- Асинхронная обработка запросов для повышения производительности.
+- Поддержка паузы/возобновления работы с помощью клавиш Page Up/Page Down.
 
-2. Низкая энтропия:
-Приватный ключ генерируется с использованием функции, которая создает ключи с предсказуемыми шаблонами (например, последовательности из нулей или одинаковых байтов).
-- Преимущества:
-Быстрое создание ключей, что может быть полезно для целей тестирования или обучения.
-- Недостатки:
-Ключи с низкой энтропией небезопасны и не должны использоваться для реальных транзакций или хранения ценностей. В этом методе наибольший шанс генерации уже существующего ключа.
-
-3. Брутфорс Vanity-адресов:
-Этот метод не генерирует ключи напрямую, а создает адреса с определёнными паттернами (префиксами и/или суффиксами). Используется функция, которая создает адреса до тех пор, пока не будет найдено совпадение с заданным шаблоном. 
-- Преимущества:
-Как бонус можете использовать для генерации себе красивых ключей, наподобие "0xDEAD6F0e71b9BEDa715cAa128D4D001d98F21666" и подобных.
-- Недостатки:
-Время генерации может быть непредсказуемым, особенно для сложных шаблонов, из-за необходимости перебора большого числа адресов. Так же ключи не являются безопасными. Большой шанс генерации одинаковых ключей. 
-
-4. Генерация в пределах группы:
-Генерация ключей производится в определенных диапазонах, заданных группами (A, B, C, D, E, F, G, H). Ключ разбивается на 8 частей и генерируется только 1\8 его часть.
-- Преимущества:
-Ограничение диапазона генерации ключей может быть полезно для создания ключей, соответствующих определенным критериям или для целей тестирования. Так же имеет большой шанс найти небезопасные ключи.
-- Недостатки:
-Генерируемые ключи могут быть менее разнообразными по сравнению с полностью случайными.
+Описание методов генерации ключей для ETH:
+1. Стандартная генерация
+Создаётся случайный 32-байтный приватный ключ с использованием криптографически безопасного генератора (bitcoinlib).
+Преимущества: Высокая энтропия, безопасность. Подходит для создания реальных кошельков.
+Недостатки: Минимальный шанс сгенерировать существующий ключ, что делает метод неподходящим для поиска уязвимых адресов.
+2. Брутфорс Vanity-адресов
+Генерирует ключи, пока адрес не будет соответствовать заданному префиксу или суффиксу.
+Преимущества: Позволяет создавать "красивые" адреса.
+Недостатки: Время генерации зависит от сложности шаблона. Ключи менее безопасны, есть риск коллизий.
+3. Генерация в пределах группы (A–H)
+Приватный ключ генерируется в заданных числовых диапазонах, разбивая пространство ключей на 8 групп.
+Преимущества: Ограничение диапазона упрощает тестирование и повышает шанс нахождения уязвимых ключей.
+Недостатки: Ключи менее разнообразны, что снижает их безопасность.
+4. Мнемонические фразы со слабым RNG
+Генерирует мнемонические фразы (BIP-39) с использованием слабого генератора случайных чисел или из словаря, затем преобразует их в ключи (BIP-32).
+Преимущества: Удобно для тестирования мнемоник. Высокий шанс нахождения уязвимых фраз.
+Недостатки: Ключи крайне небезопасны из-за предсказуемости.
+5. Уязвимые комбинированные ключи
+Создаёт ключи с предсказуемыми паттернами (повторяющиеся байты, нулевые байты, последовательности).
+Преимущества: Быстрая генерация для тестирования уязвимостей.
+Недостатки: Небезопасны, не подходят для реальных транзакций.
+6. Ключи на основе времени
+Использует временные метки как основу для создания ключей.
+Преимущества: Простота реализации, подходит для тестов.
+Недостатки: Высокая предсказуемость, ключи уязвимы.
+7. Ключи через Mersenne Twister
+Применяет псевдослучайный генератор Mersenne Twister для создания ключей.
+Преимущества: Быстрая генерация для тестирования.
+Недостатки: Низкая энтропия, ключи небезопасны.
+8. Конкатенация слабых источников
+Комбинирует слабые источники (временные метки, PID, константы) для создания ключей.
+Преимущества: Подходит для поиска уязвимых кошельков.
+Недостатки: Ключи предсказуемы и небезопасны.
+9. Ключи из паролей
+Хэширует пароли (SHA-256) для создания приватных ключей.
+Преимущества: Удобно для тестирования паролей из словаря.
+Недостатки: Зависит от качества паролей, ключи уязвимы.
+10. Ключи через устаревшие хэш-функции (MD5)
+Использует MD5 для генерации ключей.
+Преимущества: Быстрое создание для тестирования уязвимостей.
+Недостатки: MD5 устарел, ключи предсказуемы.
+11. Псевдослучайные последовательности (Xorshift)
+Применяет алгоритм Xorshift для генерации ключей.
+Преимущества: Быстрая генерация, подходит для тестов.
+Недостатки: Низкая энтропия, ключи небезопасны.
+12. Усечённые большие числа
+Генерирует ключи, усекающие большие случайные числа.
+Преимущества: Простота, подходит для тестирования.
+Недостатки: Усечение снижает энтропию, ключи уязвимы.
 
 Запуск и использование:
 1. Запустите код в среде Python с установите все необходимые библиотеки из файла ```"requirements.txt"``` командой ```"pip install -r requirements.txt"```.
 2. Выберите один из методов, который вам нужен, и вызовите соответствующую функцию.
-3. Используется три API для проверки транзакций: Guarda, Infura и Etherscan, с автоматическим переключением при превышении лимита запросов.
+3. Используется два API для проверки транзакций: Infura и Etherscan, с автоматическим переключением при превышении лимита запросов.
 4. Результаты записываются в файлы: ```successful_wallets.txt```(адреса с транзакциями), ```bad_wallets.txt```(адреса без транзакций), и ```successful_wallets_balance.txt```(адреса с балансом).
 
 Скрипт использует файл конфигурации API.ini, который должен содержать следующие ключи:
 ```
 INFURA_URL: URL Infura API.
 ETHERSCAN_API_KEY: ключ API для Etherscan.
+TELEGRAM_BOT_TOKEN = 
+TELEGRAM_CHAT_ID = 
 ```
 Файл API.ini находится рядом с исполняемым файлом, добавьте свои API для каждого сервиса. 
 
     Для поддержки автора: TFbR9gXb5r6pcALasjX1FKBArbKc4xBjY8
 -------------------------------------------------------------------------------------------
 # ETH-keys-generator-Multifunctional
-![ETH MULTI](https://github.com/user-attachments/assets/1877fb0f-f740-4b0c-a3d9-fcd557d4695b)
+![1](https://github.com/user-attachments/assets/8d3ed2ca-1821-4a6a-9a3c-5d6476887424)
 This script allows you to:
-1. Generate Ethereum addresses using various methods (Standard generation, Low entropy generation, Vanity address brute-force, Generation within groups by splitting the key into 32-bit parts (A, B, C, D, E, F, G, H)).
-2. Check if the generated addresses have any transactions.
-3. Retrieve and log the balance of the addresses.
+This script is designed to generate ETH addresses using various methods, check for transactions on these addresses and get their balance. It provides a flexible toolkit for testing, training or searching for vulnerable keys, but is not recommended for creating secure wallets for real transactions.
 
-Description of ETH key generation methods:
-1. Standard Generation:
-A random key is created based on the cryptographic hashing function Keccak.
-- Advantages:
-High entropy and security.
-Suitable for real-world applications and creating secure wallets.
-- Disadvantages:
-Not suitable for security testing as it has a very low chance of generating an existing key.
+Script features:
+- Generate ETH addresses using 12 different methods, including standard generation, low entropy methods, vanity address brute force, generation within groups (A-H) and others.
+- Check for transactions on generated addresses via API.
+- Get and write the balance of addresses in ETH.
+- Compare generated addresses with addresses from text files.
+- Saving results to files: successful_wallets.txt (addresses with transactions), successful_wallets_balance.txt (addresses with non-zero balance), bad_wallets.txt (addresses without transactions).
+- Sending notifications to Telegram when active wallets are found.
+- Asynchronous request processing to improve performance.
+- Pause/resume support using Page Up/Page Down keys.
 
-2. Low Entropy Generation:
-The private key is generated using a function that creates keys with predictable patterns (e.g., sequences of zeros or identical bytes).
-- Advantages:
-Quick key generation, useful for testing or educational purposes.
-- Disadvantages:
-Low-entropy keys are insecure and should not be used for real transactions or storing assets. This method has the highest chance of generating an existing key.
+Description of key generation methods for ETH:
+1. Standard generation
+A random 32-byte private key is created using a cryptographically secure generator (bitcoinlib).
+Advantages: High entropy, security. Suitable for creating real wallets.
+Disadvantages: Minimal chance of generating an existing key, which makes the method unsuitable for finding vulnerable addresses.
+2. Vanity Brute Force
+Generates keys until the address matches the specified prefix or suffix.
+Pros: Allows you to create "pretty" addresses.
+Cons: Generation time depends on the complexity of the template. Keys are less secure, there is a risk of collisions.
+3. Group Generation (A–H)
+The private key is generated in the specified numeric ranges, dividing the key space into 8 groups.
+Pros: Limiting the range simplifies testing and increases the chance of finding vulnerable keys.
+Cons: Keys are less diverse, which reduces their security.
+4. Mnemonic Phrases with Weak RNG
+Generates mnemonic phrases (BIP-39) using a weak random number generator or from a dictionary, then converts them to keys (BIP-32).
+Pros: Convenient for testing mnemonics. High chance of finding vulnerable phrases.
+Disadvantages: Keys are highly insecure due to predictability.
+5. Vulnerable Combined Keys
+Generates keys with predictable patterns (repeated bytes, null bytes, sequences).
+Advantages: Fast generation for vulnerability testing.
+Disadvantages: Insecure, not suitable for real transactions.
+6. Time-Based Keys
+Uses timestamps as the basis for generating keys.
+Advantages: Easy to implement, suitable for testing.
+Disadvantages: Highly predictable, keys are vulnerable.
+7. Mersenne Twister Keys
+Uses the Mersenne Twister pseudo-random generator to generate keys.
+Advantages: Fast generation for testing.
+Disadvantages: Low entropy, keys are insecure.
+8. Concatenation of Weak Sources
+Combines weak sources (timestamps, PIDs, constants) to generate keys.
+Pros: Suitable for searching vulnerable wallets.
+Cons: Keys are predictable and insecure.
+9. Keys from passwords
+Hashes passwords (SHA-256) to create private keys.
+Pros: Convenient for testing passwords from a dictionary.
+Cons: Depends on the quality of the passwords, the keys are vulnerable.
+10. Keys via obsolete hash functions (MD5)
+Uses MD5 to generate keys.
+Pros: Fast creation for vulnerability testing.
+Cons: MD5 is obsolete, keys are predictable.
+11. Pseudorandom sequences (Xorshift)
+Uses the Xorshift algorithm to generate keys.
+Pros: Fast generation, suitable for testing.
+Cons: Low entropy, keys are insecure.
+12. Truncated Large Numbers
+Generates keys that truncate large random numbers.
+Pros: Simple, suitable for testing.
+Cons: Truncating reduces entropy, keys are vulnerable.
 
-3. Vanity Address Brute-Force:
-This method doesn't generate keys directly but creates addresses with specific patterns (prefixes and/or suffixes). It keeps generating addresses until a match with the desired pattern is found.
-- Advantages:
-Allows generating custom, "vanity" addresses like "0xDEAD6F0e71b9BEDa715cAa128D4D001d98F21666".
-- Disadvantages:
-The generation time can be unpredictable, especially for complex patterns due to the need to brute-force many addresses. The keys may also be less secure with a higher chance of duplicates.
+Running and usage:
+1. Run the code in Python with ```"requirements.txt"``` install all the necessary libraries from ```"pip install -r requirements.txt"```.
+2. Select one of the methods you need and call the corresponding function.
+3. Uses two APIs for transaction verification: Infura and Etherscan, with automatic switching when the request limit is exceeded.
+4. The results are written to the files: ```successful_wallets.txt``` (addresses with transactions), ```bad_wallets.txt``` (addresses without transactions), and ```successful_wallets_balance.txt``` (addresses with balance).
 
-4. Generation Within Groups:
-Keys are generated within specific ranges defined by groups (A, B, C, D, E, F, G, H). The key is split into 8 parts, and only one part of it is generated.
-- Advantages:
-Limiting the key generation range can be useful for creating keys that meet specific criteria or for testing purposes. There is also a higher chance of finding insecure keys.
-- Disadvantages:
-The generated keys may be less diverse compared to fully random keys.
-
-Running and Usage:
-1. Run the code in a Python environment and install all required libraries from the ```requirements.txt file``` using the command: ```pip install -r requirements.txt```
-2. Choose the desired generation method and call the corresponding function.
-3. The script uses three APIs for transaction checking: Guarda, Infura, and Etherscan, with automatic switching when the request limit is reached.
-4. Results are saved into the following files: ```successful_wallets.txt``` (addresses with transactions),
-```bad_wallets.txt``` (addresses without transactions) and
-```successful_wallets_balance.txt```(addresses with balances).
-
-The script uses a configuration file API.ini that must contain the following keys:
+The script uses the API.ini configuration file, which must contain the following keys:
 ```
-INFURA_URL: URL for the Infura API.
-ETHERSCAN_API_KEY: API key for Etherscan.
+INFURA_URL: Infura API URL.
+ETHERSCAN_API_KEY: Etherscan API key.
+TELEGRAM_BOT_TOKEN =
+TELEGRAM_CHAT_ID =
 ```
 The API.ini file should be located alongside the script, and you need to add your API keys for each service.
 
