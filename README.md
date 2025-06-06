@@ -1,5 +1,6 @@
 # ETH-keys-generator-Multifunctional
-![1](https://github.com/user-attachments/assets/8d3ed2ca-1821-4a6a-9a3c-5d6476887424)
+![1](https://github.com/user-attachments/assets/e72d5fe2-0be9-47bf-bf7d-6dc03c550047)
+
 Данный скрипт позволяет:
     Данный скрипт предназначен для генерации ETH-адресов с использованием различных методов, проверки наличия транзакций на этих адресах и получения их баланса. Он предоставляет гибкий инструментарий для тестирования, обучения или поиска уязвимых ключей, но не рекомендуется для создания безопасных кошельков для реальных транзакций.
 
@@ -81,7 +82,8 @@ TELEGRAM_CHAT_ID =
     Для поддержки автора: TFbR9gXb5r6pcALasjX1FKBArbKc4xBjY8
 -------------------------------------------------------------------------------------------
 # ETH-keys-generator-Multifunctional
-![1](https://github.com/user-attachments/assets/8d3ed2ca-1821-4a6a-9a3c-5d6476887424)
+![1](https://github.com/user-attachments/assets/e72d5fe2-0be9-47bf-bf7d-6dc03c550047)
+
 This script allows you to:
 This script is designed to generate ETH addresses using various methods, check for transactions on these addresses and get their balance. It provides a flexible toolkit for testing, training or searching for vulnerable keys, but is not recommended for creating secure wallets for real transactions.
 
