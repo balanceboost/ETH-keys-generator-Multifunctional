@@ -1,8 +1,7 @@
 # ETH-keys-generator-Multifunctional
 ![1](https://github.com/user-attachments/assets/e72d5fe2-0be9-47bf-bf7d-6dc03c550047)
 
-Данный скрипт позволяет:
-    Данный скрипт предназначен для генерации ETH-адресов с использованием различных методов, проверки наличия транзакций на этих адресах и получения их баланса. Он предоставляет гибкий инструментарий для тестирования, обучения или поиска уязвимых ключей, но не рекомендуется для создания безопасных кошельков для реальных транзакций.
+Данный скрипт предназначен для генерации ETH-адресов с использованием различных методов, проверки наличия транзакций на этих адресах и получения их баланса. Он предоставляет гибкий инструментарий для тестирования, обучения или поиска уязвимых ключей, но не рекомендуется для создания безопасных кошельков для реальных транзакций.
 
 Возможности скрипта:
 - Генерация ETH-адресов с использованием 12 различных методов, включая стандартную генерацию, методы с низкой энтропией, брутфорс vanity-адресов, генерацию в пределах групп (A–H) и другие.
@@ -84,7 +83,6 @@ TELEGRAM_CHAT_ID =
 # ETH-keys-generator-Multifunctional
 ![1](https://github.com/user-attachments/assets/e72d5fe2-0be9-47bf-bf7d-6dc03c550047)
 
-This script allows you to:
 This script is designed to generate ETH addresses using various methods, check for transactions on these addresses and get their balance. It provides a flexible toolkit for testing, training or searching for vulnerable keys, but is not recommended for creating secure wallets for real transactions.
 
 Script features:
